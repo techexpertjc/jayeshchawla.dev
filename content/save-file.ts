@@ -113,7 +113,11 @@ export const profile = {
     "engine, rebuilt an AI product from the ground up twice, and led a full cloud " +
     "migration from GCP to Azure including production data.",
   location: "India",
-  email: "jayeshchawla123@gmail.com",
+  /**
+   * The domain mailbox, not a personal one — it is printed on the resume and
+   * published in the structured data, so it should match the site it is on.
+   */
+  email: "hi@jayeshchawla.dev",
   /**
    * Canonical site URL. The single place the domain is written — metadata,
    * sitemap, robots and the structured data all derive from it.
