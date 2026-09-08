@@ -3,6 +3,7 @@ import { PlayClient } from "./PlayClient";
 
 export const metadata: Metadata = {
   title: "Explore",
+  alternates: { canonical: "/play" },
   description: "Walk the world.",
 };
 

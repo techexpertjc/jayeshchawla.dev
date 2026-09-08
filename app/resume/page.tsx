@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PrintButton } from "@/components/PrintButton";
+import { StructuredData } from "@/components/StructuredData";
 import {
   bio,
   durationMonths,
@@ -17,6 +18,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Resume",
+  alternates: { canonical: "/resume" },
   description: `${profile.name} — ${profile.title}. ${profile.tagline}`,
 };
 
@@ -237,30 +239,3 @@ function SkillRow({ label, kinds }: { label: string; kinds: Array<"weapon" | "ar
   );
 }
 
-/** Person schema so search engines read this as a real profile. */
-function StructuredData() {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: profile.name,
-    jobTitle: profile.title,
-    description: profile.tagline,
-    email: `mailto:${profile.email}`,
-    // schema.org: `url` is the person's own site; `sameAs` is where else they
-    // exist. Putting the socials in `url` says the profiles *are* the site.
-    url: profile.siteUrl,
-    sameAs: profile.socials.filter((s) => s.href).map((s) => s.href),
-    address: { "@type": "PostalAddress", addressCountry: profile.location },
-    knowsAbout: gear.map((item) => item.name),
-    worksFor: mainQuests
-      .filter((q) => q.end === null)
-      .map((q) => ({ "@type": "Organization", name: q.org })),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
-}

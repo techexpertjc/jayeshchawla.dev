@@ -52,7 +52,15 @@ export const metadata: Metadata = {
     title: `${profile.name} — ${profile.title}`,
     description: profile.tagline,
   },
-  alternates: { canonical: "/" },
+  /*
+    No `alternates.canonical` here on purpose.
+
+    Metadata merges down the tree, so a canonical set on the root layout is
+    inherited by every page that does not override one — which told search
+    engines that /resume and /play were both duplicates of the home page, and
+    asked them not to index the one page with all the text on it. Each route
+    declares its own.
+  */
   robots: { index: true, follow: true },
 };
 

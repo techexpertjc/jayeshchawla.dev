@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PreloadWorld } from "./PreloadWorld";
+import { StructuredData } from "@/components/StructuredData";
 import { mainQuests, profile, yearsOfExperience } from "@/content/save-file";
 
 /**
@@ -8,6 +10,12 @@ import { mainQuests, profile, yearsOfExperience } from "@/content/save-file";
  * would keep showing whatever the number was on the day it shipped.
  */
 export const revalidate = 86400;
+
+/*
+  This page, not /resume, is what someone searching the name lands on, so it
+  declares its own canonical rather than inheriting one.
+*/
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 /**
  * Boot screen. Deliberately pure DOM + CSS — it must paint instantly, before
@@ -21,6 +29,8 @@ export default function BootPage() {
     <main className="relative flex min-h-dvh flex-col overflow-hidden bg-ink-900 text-paper-100">
       {/* Fetches the world in the background while this screen is being read. */}
       <PreloadWorld />
+      {/* Person schema — same entity as Resume Mode describes. */}
+      <StructuredData />
       <Sky />
       <Petals />
 
