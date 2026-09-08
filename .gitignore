@@ -1,0 +1,23 @@
+node_modules/
+.next/
+.next-*/
+out/
+build/
+dist/
+
+.env*
+!.env.example
+
+*.tsbuildinfo
+next-env.d.ts
+
+.DS_Store
+Thumbs.db
+
+.vercel
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Large source assets (keep only the optimized glb/ktx2 in public/)
+/assets-src/

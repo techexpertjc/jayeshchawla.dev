@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "prod",
+      "runtimeExecutable": "cmd.exe",
+      "runtimeArgs": [
+        "/c",
+        "set NEXT_DIST_DIR=.next-verify&& C:\\PROGRA~1\\nodejs\\node.exe node_modules\\next\\dist\\bin\\next start -p 3001"
+      ],
+      "port": 3001
+    },
+    {
+      "name": "dev-verify",
+      "runtimeExecutable": "cmd.exe",
+      "runtimeArgs": [
+        "/c",
+        "set NEXT_DIST_DIR=.next-dev-verify&& C:\\PROGRA~1\\nodejs\\node.exe node_modules\\next\\dist\\bin\\next dev -p 3002"
+      ],
+      "port": 3002
+    }
+  ]
+}

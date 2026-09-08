@@ -1,0 +1,256 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Design tokens — the toon palette.
+ * These are shared by the 3D world and the DOM layer so the HUD and the
+ * scene never drift apart.
+ * ------------------------------------------------------------------ */
+
+@theme {
+  /* Ink — outlines, text, night sky */
+  --color-ink-900: #0f1119;
+  --color-ink-800: #14161f;
+  --color-ink-700: #1d2130;
+  --color-ink-600: #2b3145;
+  --color-ink-400: #545c78;
+
+  /* Paper — UI panels, dialogue boxes, resume surface */
+  --color-paper-50: #fdfaf3;
+  --color-paper-100: #f6f1e4;
+  --color-paper-200: #ece3cf;
+  --color-paper-300: #d9ccb0;
+
+  /* Sky — daylight, water, calm states */
+  --color-sky-200: #d3f0fb;
+  --color-sky-400: #8fd3f4;
+  --color-sky-600: #4a7fb5;
+  --color-sky-800: #2b4c73;
+
+  /* Sakura — the signature accent */
+  --color-sakura-300: #ffc9dd;
+  --color-sakura-400: #ff9ec4;
+  --color-sakura-600: #e56a9b;
+
+  /* Quest colours */
+  --color-gold-400: #f2c14e;
+  --color-gold-600: #c9932a;
+  --color-jade-400: #5fbf9f;
+  --color-ember-400: #ef6f5c;
+
+  /* Type */
+  --font-display: var(--font-zen), ui-rounded, "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion — every animation in the app pulls from these */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-anime: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+
+:root {
+  --surface: var(--color-paper-50);
+  --surface-raised: #ffffff;
+  --text: var(--color-ink-800);
+  --text-muted: var(--color-ink-400);
+  --rule: var(--color-paper-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: var(--color-ink-900);
+    --surface-raised: var(--color-ink-800);
+    --text: var(--color-paper-100);
+    --text-muted: #8b93ad;
+    --rule: var(--color-ink-600);
+  }
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /*
+    Stops the story scroll from triggering pull-to-refresh at the top of the
+    path, and from chaining into an ancestor at the bottom of it.
+  */
+  overscroll-behavior-y: contain;
+}
+
+/* Tap highlight is a rectangle over round buttons and reads as a glitch. */
+button,
+a,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--color-sakura-400);
+  color: var(--color-ink-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sakura-600);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect the user. Phase 5 wires this into the 3D layer too. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Boot screen — pure CSS so it paints before any JS or 3D arrives.
+ * ------------------------------------------------------------------ */
+
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--petal-opacity, 0.7);
+  }
+  90% {
+    opacity: var(--petal-opacity, 0.7);
+  }
+  100% {
+    transform: translate3d(var(--petal-drift, 6vw), 110vh, 0) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@keyframes title-rise {
+  from {
+    transform: translate3d(0, 1.2rem, 0);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  to {
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@keyframes cursor-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 0.35;
+    transform: translateX(2px);
+  }
+}
+
+.petal {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 100% 0 100% 0;
+  background: var(--color-sakura-400);
+  animation: petal-fall var(--petal-duration, 12s) linear var(--petal-delay, 0s) infinite;
+  will-change: transform, opacity;
+}
+
+.rise {
+  animation: title-rise 900ms var(--ease-out-quint) both;
+}
+
+/* ------------------------------------------------------------------ *
+ * Print — Resume Mode has to survive Ctrl+P
+ * ------------------------------------------------------------------ */
+
+@media print {
+  :root {
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --text: #000000;
+    --text-muted: #444444;
+    --rule: #cccccc;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 10.5pt;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  /* Show destinations for external links only. */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8.5pt;
+    color: #555;
+  }
+
+  /*
+    Keep a single job entry or bullet whole — but never a whole <section>.
+    A section holds every job and is taller than a page, so `break-inside:
+    avoid` on it forces the entire block onto the next page and leaves page
+    one nearly empty.
+  */
+  article,
+  li {
+    break-inside: avoid;
+  }
+
+  /* Never strand a heading at the foot of a page, separated from its content. */
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Screen spacing is generous; print pays for it by the page. */
+  main {
+    padding-top: 0;
+  }
+
+  section {
+    margin-top: 1.15rem !important;
+  }
+
+  article + article {
+    margin-top: 1.15rem !important;
+  }
+
+  header {
+    padding-bottom: 1rem !important;
+  }
+}

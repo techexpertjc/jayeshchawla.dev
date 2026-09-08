@@ -1,0 +1,10 @@
+# Store text as LF in the repo regardless of the platform it was authored on.
+# Set before the first commit, so history never carries mixed line endings.
+* text=auto eol=lf
+
+# Binary assets — never touch these.
+*.glb   binary
+*.webp  binary
+*.png   binary
+*.jpg   binary
+*.woff2 binary
