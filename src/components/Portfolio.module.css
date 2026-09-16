@@ -573,14 +573,20 @@
   max-width: 1240px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: clamp(32px, 5vw, 72px);
   align-items: start;
 }
 
-.experienceIntro {
-  position: sticky;
-  top: 112px;
+/* Sticky intro only works beside the timeline; stacked, it covers it. */
+@media (min-width: 780px) {
+  .experienceGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .experienceIntro {
+    position: sticky;
+    top: 112px;
+  }
 }
 
 .experienceIntro h2 {
